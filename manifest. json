@@ -1,0 +1,12 @@
+
+{
+  "name": "ZACKI TELECOM",
+  "short_name": "ZACKI",
+  "description": "ZACKI TELECOM Digital Network",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f9",
+  "theme_color": "#101b35",
+  "icons": []
+}
