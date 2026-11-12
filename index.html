@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b35">
+<title>ZACKI TELECOM</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root {
+  --navy:#101b35;
+  --gold:#d4af37;
+  --bg:#f3f5f9;
+  --white:#fff;
+  --green:#087b50;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Arial,sans-serif;
+ background:var(--bg);color:#182238;
+}
+header{
+ background:var(--navy);color:white;
+ padding:18px 20px;display:flex;
+ justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:10px;
+}
+.brand{font-size:21px;font-weight:bold;color:var(--gold)}
+header small{display:block;color:white;font-size:11px;margin-top:5px}
+button{
+ border:0;padding:12px 17px;border-radius:7px;
+ background:var(--gold);color:#101b35;
+ font-weight:bold;cursor:pointer;
+}
+button.secondary{background:#e7eaf0;color:#17233d}
+button.danger{background:#b52b37;color:white}
+input,select{
+ width:100%;padding:13px;margin:7px 0 14px;
+ border:1px solid #d5dbe5;border-radius:7px;
+ font-size:15px;background:white;
+}
+label{font-size:13px;font-weight:bold}
+main{max-width:1100px;margin:auto;padding:20px}
+.card{
+ background:white;padding:20px;border-radius:12px;
+ margin-bottom:16px;box-shadow:0 3px 12px #17233d0b;
+}
+.hero{
+ background:linear-gradient(120deg,#101b35,#243e68);
+ color:white;padding:35px 24px;border-radius:14px;
+ margin-bottom:20px;
+}
+.hero h1{color:var(--gold);font-size:30px}
+.grid{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+ gap:14px;
+}
+.stat{border-left:4px solid var(--gold)}
+.stat strong{display:block;font-size:27px;margin-top:10px}
+.muted{color:#748096;font-size:13px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+nav button{background:white;color:var(--navy);border:1px solid #ddd}
+nav button.active{background:var(--navy);color:white}
+.hidden{display:none!important}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:11px;border-bottom:1px solid #e8ebf0}
+th{background:#f2f4f8}
+.tablewrap{overflow-x:auto}
+.status{padding:5px 9px;border-radius:20px;background:#e4f5eb;color:#087b50;font-size:11px}
+.status.pending{background:#fff2d5;color:#956400}
+.status.expired{background:#ffe5e5;color:#ad2525}
+.package{border:1px solid #e3e7ef;border-radius:10px;padding:16px}
+.package h3{color:var(--navy)}
+footer{text-align:center;padding:25px;color:#718096;font-size:12px}
+.message{padding:12px;background:#e4f5eb;border-radius:7px;margin:10px 0}
+#auth{max-width:430px;margin:35px auto}
+@media(max-width:600px){
+ main{padding:12px}
+ .hero h1{font-size:24px}
+ header{padding:15px}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div>
+  <div class="brand">ZACKI TELECOM</div>
+  <small>CONNECTING COMMUNITIES. EMPOWERING THE FUTURE.</small>
+ </div>
+ <div id="headerAction">
+  <button onclick="showAuth()">Login / Register</button>
+ </div>
+</header>
+
+<main>
+
+<section id="home">
+ <div class="hero">
+  <p>WELCOME TO THE FUTURE</p>
+  <h1>ZACKI TELECOM</h1>
+  <p>Your digital telecommunications management platform.</p>
+  <button onclick="showAuth()">Get Started</button>
+ </div>
+
+ <div class="grid">
+  <div class="card">
+   <h3>Internet Packages</h3>
+   <p class="muted">Explore available subscription plans.</p>
+  </div>
+  <div class="card">
+   <h3>Customer Accounts</h3>
+   <p class="muted">Create and manage your account.</p>
+  </div>
+  <div class="card">
+   <h3>Digital Services</h3>
+   <p class="muted">View telecom service information.</p>
+  </div>
+ </div>
+
+ <div class="card">
+  <h2>Our Internet Packages</h2>
+  <div id="publicPackages" class="grid"></div>
+ </div>
+</section>
+
+<section id="auth" class="hidden">
+ <div class="card">
+  <h2 id="authTitle">Customer Login</h2>
+  <div id="authMessage"></div>
+  <label>Email address</label>
+  <input id="email" type="email" placeholder="Enter email">
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Enter password">
+  <div id="registerFields" class="hidden">
+   <label>Full name</label>
+   <input id="fullName" placeholder="Your full name">
+   <label>Phone number</label>
+   <input id="phone" placeholder="080XXXXXXXX">
+  </div>
+  <button id="authButton" onclick="login()">Login</button>
+  <p class="muted" id="switchText">
+   New customer? <a href="#" onclick="toggleRegister();return false">Register here</a>
+  </p>
+  <button class="secondary" onclick="goHome()">Back to home</button>
+ </div>
+</section>
+
+<section id="dashboard" class="hidden">
+ <div class="card">
+  <h2 id="welcome">Dashboard</h2>
+  <p class="muted" id="roleText"></p>
+  <button class="secondary" onclick="logout()">Logout</button>
+ </div>
+
+ <div id="adminPanel" class="hidden">
+  <nav>
+   <button class="active" onclick="adminTab('overview',this)">Overview</button>
+   <button onclick="adminTab('customers',this)">Customers</button>
+   <button onclick="adminTab('packages',this)">Packages</button>
+   <button onclick="adminTab('announcements',this)">Announcements</button>
+   <button onclick="adminTab('monitor',this)">Monitoring</button>
+  </nav>
+
+  <div id="overview" class="adminTab">
+   <div class="grid">
+    <div class="card stat">Total customers<strong id="totalCustomers">0</strong></div>
+    <div class="card stat">Active subscriptions<strong id="activeSubs">0</strong></div>
+    <div class="card stat">Available packages<strong id="totalPackages">0</strong></div>
+   </div>
+   <div class="card">
+    <h3>Company information</h3>
+    <p>ZACKI TELECOM – Sokoto, Nigeria</p>
+    <p class="muted">Community internet platform management.</p>
+   </div>
+  </div>
+
+  <div id="customers" class="adminTab hidden">
+   <div class="card">
+    <h3>Registered customers</h3>
+    <div class="tablewrap">
+     <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody id="customerRows"></tbody>
+     </table>
+    </div>
+   </div>
+  </div>
+
+  <div id="packages" class="adminTab hidden">
+   <div class="card">
+    <h3>Create internet package</h3>
+    <label>Package name</label>
+    <input id="newPackage" placeholder="e.g. ZACKI Basic">
+    <label>Speed</label>
+    <input id="newSpeed" placeholder="e.g. 5 Mbps">
+    <label>Price (₦)</label>
+    <input id="newPrice" type="number" min="0" placeholder="5000">
+    <label>Duration</label>
+    <select id="newDuration">
+     <option>7 days</option><option>30 days</option>
+     <option>90 days</option>
+    </select>
+    <button onclick="addPackage()">Add package</button>
+   </div>
+   <div class="card">
+    <h3>Manage packages</h3>
+    <div id="managePackages"></div>
+   </div>
+  </div>
+
+  <div id="announcements" class="adminTab hidden">
+   <div class="card">
+    <h3>Publish announcement</h3>
+    <input id="announcementText" placeholder="Write your announcement">
+    <button onclick="publishAnnouncement()">Publish</button>
+   </div>
+   <div class="card" id="announcementList"></div>
+  </div>
+
+  <div id="monitor" class="adminTab hidden">
+   <div class="card">
+    <h3>Network monitoring</h3>
+    <p>Platform status: <span class="status">Application online</span></p>
+    <p>Registered customers: <strong id="monitorCustomers">0</strong></p>
+    <p>Network traffic: <strong>Not connected</strong></p>
+    <p class="muted">Live router and internet monitoring will be added when real network equipment is connected.</p>
+   </div>
+  </div>
+ </div>
+
+ <div id="customerPanel" class="hidden">
+  <div class="grid">
+   <div class="card stat">Account status<strong id="customerStatus">Active</strong></div>
+   <div class="card stat">My package<strong id="myPackage">None</strong></div>
+  </div>
+  <div class="card">
+   <h3>Available subscriptions</h3>
+   <div id="customerPackages" class="grid"></div>
+  </div>
+  <div class="card">
+   <h3>My subscription requests</h3>
+   <div id="myRequests"></div>
+  </div>
+  <div class="card">
+   <h3>Company announcements</h3>
+   <div id="customerAnnouncements"></div>
+  </div>
+ </div>
+</section>
+</main>
+
+<footer>
+ ZACKI TELECOM © 2026. All rights reserved.
+ <br>Digital platform demonstration.
+</footer>
+
+<script>
+const KEY="zacki_telecom_v1";
+let data=JSON.parse(localStorage.getItem(KEY)||"null");
+if(!data){
+ data={
+  users:[],
+  packages:[
+   {id:1,name:"ZACKI Starter",speed:"2 Mbps",price:3000,duration:"30 days"},
+   {id:2,name:"ZACKI Basic",speed:"5 Mbps",price:5000,duration:"30 days"},
+   {id:3,name:"ZACKI Standard",speed:"10 Mbps",price:8000,duration:"30 days"}
+  ],
+  requests:[],
+  announcements:[]
+ };
+ save();
+}
+let current=null;
+let registering=false;
+
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function el(id){return document.getElementById(id)}
+function safe(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function show(id){
+ ["home","auth","dashboard"].forEach(x=>el(x).classList.add("hidden"));
+ el(id).classList.remove("hidden");
+}
+function goHome(){show("home")}
+function showAuth(){registering=false;updateAuth();show("auth")}
+function toggleRegister(){registering=!registering;updateAuth()}
+function updateAuth(){
+ el("authTitle").textContent=registering?"Customer Registration":"Customer Login";
+ el("registerFields").classList.toggle("hidden",!registering);
+ el("authButton").textContent=registering?"Create Account":"Login";
+ el("switchText").innerHTML=registering?
+ 'Already registered? <a href="#" onclick="toggleRegister();return false">Login</a>':
+ 'New customer? <a href="#" onclick="toggleRegister();return false">Register here</a>';
+ el("authMessage").innerHTML="";
+}
+function login(){
+ const email=el("email").value.trim().toLowerCase();
+ const password=el("password").value;
+ if(!email||!password){alert("Enter email and password");return}
+ if(registering){
+  const name=el("fullName").value.trim();
+  const phone=el("phone").value.trim();
+  if(!name||!phone){alert("Enter your name and phone number");return}
+  if(data.users.some(u=>u.email===email)){
+   alert("This email is already registered");return;
+  }
+  data.users.push({
+   id:Date.now(),name,phone,email,password,
+   role:"customer",status:"Active"
+  });
+  save();
+  alert("Account created successfully. Please log in.");
+  registering=false;updateAuth();return;
+ }
+ if(email==="admin@zackitelecom.com"&&password==="admin123"){
+  current={name:"ZACKI Administrator",role:"admin"};
+  openDashboard();return;
+ }
+ const user=data.users.find(u=>u.email===email&&u.password===password);
+ if(!user){alert("Incorrect login details");return}
+ current=user;openDashboard();
+}
+function openDashboard(){
+ show("dashboard");
+ el("headerAction").innerHTML='<button onclick="logout()">Logout</button>';
+ el("welcome").textContent="Welcome, "+current.name;
+ el("roleText").textContent=current.role==="admin"?"Administrator account":"Customer account";
+ el("adminPanel").classList.toggle("hidden",current.role!=="admin");
+ el("customerPanel").classList.toggle("hidden",current.role!=="customer");
+ if(current.role==="admin")renderAdmin();
+ else renderCustomer();
+}
+function logout(){
+ current=null;show("home");
+ el("headerAction").innerHTML='<button onclick="showAuth()">Login / Register</button>';
+}
+function renderPackages(target){
+ el(target).innerHTML=data.packages.map(p=>`
+ <div class="package">
+  <h3>${safe(p.name)}</h3>
+  <p>${safe(p.speed)}</p>
+  <h2>₦${Number(p.price).toLocaleString("en-NG")}</h2>
+  <p class="muted">${safe(p.duration)}</p>
+ </div>`).join("")||"<p>No packages available.</p>";
+}
+function renderPublic(){renderPackages("publicPackages")}
+function renderAdmin(){
+ el("totalCustomers").textContent=data.users.length;
+ el("activeSubs").textContent=data.requests.filter(r=>r.status==="Active").length;
+ el("totalPackages").textContent=data.packages.length;
+ el("monitorCustomers").textContent=data.users.length;
+ el("customerRows").innerHTML=data.users.map(u=>`
+ <tr>
+  <td>${safe(u.name)}</td><td>${safe(u.email)}</td>
+  <td>${safe(u.phone)}</td><td><span class="status">${safe(u.status)}</span></td>
+  <td><button class="secondary" onclick="changeStatus(${u.id})">Change</button></td>
+ </tr>`).join("")||"<tr><td colspan='5'>No customers yet.</td></tr>";
+ el("managePackages").innerHTML=data.packages.map(p=>`
+ <p>${safe(p.name)} – ₦${Number(p.price).toLocaleString("en-NG")}
+ <button class="danger" onclick="deletePackage(${p.id})">Delete</button></p>
+ `).join("");
+ el("announcementList").innerHTML=data.announcements.map(a=>`<p>${safe(a)}</p>`).join("")||"No announcements.";
+}
+function adminTab(id,btn){
+ document.querySelectorAll(".adminTab").forEach(x=>x.classList.add("hidden"));
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+ el(id).classList.remove("hidden");btn.classList.add("active");
+}
+function addPackage(){
+ const name=el("newPackage").value.trim();
+ const speed=el("newSpeed").value.trim();
+ const price=Number(el("newPrice").value);
+ if(!name||!speed||!Number.isFinite(price)||price<=0){
+  alert("Enter valid package details");return;
+ }
+ data.packages.push({
+  id:Date.now(),name,speed,price,
+  duration:el("newDuration").value
+ });
+ save();renderAdmin();renderPublic();
+ alert("Package created");
+}
+function deletePackage(id){
+ if(!confirm("Delete this package?"))return;
+ data.packages=data.packages.filter(p=>p.id!==id);
+ save();renderAdmin();renderPublic();
+}
+function changeStatus(id){
+ const user=data.users.find(u=>u.id===id);
+ if(!user)return;
+ user.status=user.status==="Active"?"Suspended":"Active";
+ save();renderAdmin();
+}
+function publishAnnouncement(){
+ const message=el("announcementText").value.trim();
+ if(!message)return;
+ data.announcements.unshift(message);
+ save();el("announcementText").value="";
+ renderAdmin();
+}
+function renderCustomer(){
+ const user=data.users.find(u=>u.id===current.id);
+ const requests=data.requests.filter(r=>r.userId===current.id);
+ const active=requests.find(r=>r.status==="Active");
+ el("customerStatus").textContent=user?.status||"Active";
+ el("myPackage").textContent=active?active.package:"None";
+ el("customerPackages").innerHTML=data.packages.map(p=>`
+ <div class="package">
+  <h3>${safe(p.name)}</h3><p>${safe(p.speed)}</p>
+  <h2>₦${Number(p.price).toLocaleString("en-NG")}</h2>
+  <p>${safe(p.duration)}</p>
+  <button onclick="requestPackage(${p.id})">Request package</button>
+ </div>`).join("");
+ el("myRequests").innerHTML=requests.map(r=>`
+ <p>${safe(r.package)} – <span class="status ${r.status==="Pending"?"pending":""}">${safe(r.status)}</span></p>
+ `).join("")||"No subscription requests yet.";
+ el("customerAnnouncements").innerHTML=data.announcements.map(a=>`<p>${safe(a)}</p>`).join("")||"No announcements.";
+}
+function requestPackage(id){
+ const p=data.packages.find(x=>x.id===id);
+ if(!p)return;
+ data.requests.push({
+  id:Date.now(),userId:current.id,
+  package:p.name,status:"Pending"
+ });
+ save();renderCustomer();
+ alert("Request submitted. This is a demo request, not a payment.");
+}
+renderPublic();
+if("serviceWorker" in navigator){
+ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
